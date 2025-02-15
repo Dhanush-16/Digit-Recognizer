@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DRAW YOUR IMAGE HEARE</title>
+    <style>
+        .canvas-div { text-align: center; }
+        .btn { margin: 5px; padding: 10px; font-size: 16px; cursor: pointer; }
+        .btn-danger { background-color: #e74c3c; color: #fff; }
+        .btn-success { background-color: #2ecc71; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="canvas-div">
+        <h1>DRAW YOUR IMAGE HEARE</h1>
+        <canvas id="canvas" width="400" height="400" style="border:1px solid #000;"></canvas><br>
+        <button class="btn btn-danger" onclick="clearCanvas()">Clear Canvas</button>
+        <button class="btn btn-success" onclick="saveImage()">💾 Save</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 400; canvas.height = 400;
+        ctx.fillStyle = "white"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        });
+
+        canvas.addEventListener('mouseup', () => drawing = false);
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = 'black';
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        });
+
+        function clearCanvas() { ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.beginPath(); }
+
+        function saveImage() {
+            const link = document.createElement('a');
+            link.download = 'canvas_image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
